@@ -35,8 +35,8 @@ This interface defines the fields:
 
 ```graphql
 interface UIComponent {
-	id: ID!
-	components: [UIComponent]
+  id: ID!
+  components: [UIComponent]
 }
 ```
 
@@ -92,7 +92,7 @@ This interface defines the fields:
 interface UIEvent {
   id: ID!
   type: UIEventType!
-	actions: [UIActionType]
+  actions: [UIActionType]
 }
 ```
 
@@ -111,8 +111,8 @@ This interface defines the fields:
 
 ```graphql
 interface UIEvents {
-	id: ID!
-	events: [UIEvent]
+  id: ID!
+  events: [UIEvent]
 }
 ```
 
@@ -157,7 +157,7 @@ This interface defines the fields:
 interface UIAction {
   id: ID!
   type: UIActionType!
-	events: [UIEventType]
+  events: [UIEventType]
 }
 ```
 
@@ -176,8 +176,8 @@ This interface defines the fields:
 
 ```graphql
 interface UIActions {
-	id: ID!
-	actions: [UIAction]
+  id: ID!
+  actions: [UIAction]
 }
 ```
 
@@ -193,34 +193,34 @@ enum UIActionType {
 type NavigateAction implements UIAction {
   id: ID!
   type: UIActionType!
-	events: [UIEventType]
+  events: [UIEventType]
   url: String!
 }
 
 type ClickEvent implements UIEvent {
-	id: ID!
-	type: UIEventType!
-	actions: [UIActionType]
+  id: ID!
+  type: UIEventType!
+  actions: [UIActionType]
 }
 
 """
 A button component.
 """
 type ButtonComponent implements UIActions & UIEvents & UIComponent {
-	"An ID for uniquly identifying the button."
+  "An ID for uniquly identifying the button."
   id: ID!
-	"A collection of actions the button can perform."
-	actions: [UIAction]
-	"A collection of events the button can emit."
-	events: [UIEvent]
-	"A collection of components which can be nested within the button."
-	components: [UIComponent]
-	"A label for the button."
+  "A collection of actions the button can perform."
+  actions: [UIAction]
+  "A collection of events the button can emit."
+  events: [UIEvent]
+  "A collection of components which can be nested within the button."
+  components: [UIComponent]
+  "A label for the button."
   label: String!
-	"A click event which can be emitted by the button."
+  "A click event which can be emitted by the button."
   click: ClickEvent!
-	"A navigate action which can be triggered by the click event."
-	navigate: NavigateAction!
+  "A navigate action which can be triggered by the click event."
+  navigate: NavigateAction!
 }
 ```
 
@@ -232,17 +232,17 @@ enum UIActionType {
 }
 
 type ClickEvent implements UIEvent {
-	id: ID!
-	type: UIEventType!
-	actions: [UIActionType]
+  id: ID!
+  type: UIEventType!
+  actions: [UIActionType]
 }
 
 type ButtonComponent implements UIEvents & UIComponent {
   id: ID!
-	events: [UIEvent]
-	components: [UIComponent]
+  events: [UIEvent]
+  components: [UIComponent]
   label: String!
- 	click: ClickEvent!
+  click: ClickEvent!
 }
 
 type NavigateAction implements UIAction {
@@ -252,9 +252,9 @@ type NavigateAction implements UIAction {
 }
 
 type ButtonActions implements UIActions & UIComponent {
-	id: ID!
-	actions: [UIActionType]
-	components: [UIComponent]
-	navigate: NavigateAction!
+  id: ID!
+  actions: [UIActionType]
+  components: [UIComponent]
+  navigate: NavigateAction!
 }
 ```
