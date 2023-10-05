@@ -18,45 +18,50 @@ This specification is intended for developers who are familiar with GraphQL and 
 
 The SDUI Specification defines the following:
 
-- **`Components`** which are types within the schema that represent something that can be rendered on the client.
-- **`Events`**
-- **`Actions`**
+- **Components** which are types within the schema that represent something that can be rendered on the client.
+- **Events** which are events that users trigger that we want to track
+- **Actions** which are the steps a client app should take after a certain **Event** is triggered
 
 ## UI Components
 
-The **`UIComponent`** interface represents the common set of properties that all UI components in the application should have. 
-
-This interface defines the fields:
-
-- **`id`**: An ID field that uniquely identifies the component.
-*(non-nullable)*
-- **`components`**: A list of child **`UIComponent`** objects that belong to the current component.
-*(nullable)*
+It might be your first assumption to create a `UIComponent` interface that represents the common set of properties that all UI components in the application should have. Something like this:
 
 ```graphql
+# DO NOT USE THIS!
 interface UIComponent {
   id: ID!
   components: [UIComponent]
 }
 ```
 
-By defining the **`UIComponent`** interface, we can create more specific types that implement this interface and add additional fields specific to their type.
+However, we find that at scale this interface actually becomes unusable. If every single component implemented it your fragment selections become to large and you would never actually return this one interface as the return type in any field because it would be too complicated. Enforcing the all components types have an `id` field is also not the job of a GraphQL interface, that should be handled by linters.
 
----
+Instead we reccomnd page or usecase specific unions for your components.
 
-For example, we can create a **`ImageComponent`** type that implements the **`UIComponent`** interface and adds a **`src`** field for the component's image source:
+For example, we can create a `ProductCard` type and a `AdvertisementCard` type and return either one in our `searchResults`:
 
 ```graphql
-type ImageComponent implements UIComponent {
-  id: ID
-  components: [UIComponent]
-  src: String!
+type ProductCard {
+  title: String
+  price: String
+  reviews: [Review]
+  productData: Product
+}
+
+type AdvertisementCard {
+  title: String
+  link: URL
+  partnerInfo: Partner
+}
+
+union SearchResult = ProductCard | AdvertisementCard
+
+type Query {
+  searchResults: [SearchResult]
 }
 ```
 
-Similarly, we can create other types like **`TextComponent`**, **`ButtonComponent`**, etc. that implement the **`UIComponent`** interface and add fields specific to their type.
-
-By using the **`UIComponent`** interface, we can define a hierarchy of nested components, where each component can have child components. This enables us to create complex UI layouts through composing simple UI components together. The server can then use this hierarchy to dynamically generate UI components and send the necessary instructions to the client to render them.
+By using focused unions, we can define a hierarchy of components without blowing out the tree to infitite possibilities. This enables us to create all known UI layouts but still have the option to create large union sets when needed.
 
 ----
 # UI Events
